@@ -367,7 +367,7 @@ function adicionaBlocos(jogo, tabuleiro, blocos)
 
 return blocos
 
-function main()
+function StartGame()
 
     local blocos := {}
     local tabuleiro
@@ -401,7 +401,7 @@ function main()
     bola      = {{"row", prop(tabuleiro,"rows")-3}, {"col", prop(tabuleiro,"cols")/2}, {"direction", "down"},{"inclination","right"},{"char",chr(9)},{"cor","G+/N"}}
     // raquete   = {{"row", prop(tabuleiro,"rows")-2}, {"col", 6}, {"width", 30},{"char",chr(178)}, {"cor",corSetMess}}
 
-    jogo = {{"qtdBlocos", len(blocos)},{"message",""},{"messagecolor","W/N, BG+/B"},{"debug",.F.}}
+    jogo = {{"qtdBlocos", len(blocos)},{"message",""},{"messagecolor","W/N, BG+/B"},{"debug",.F.},{"vitoria",.F.}}
     adicionaBlocos(jogo, tabuleiro, blocos)
 
     if prop(jogo,"debug")
@@ -452,14 +452,14 @@ function main()
         inkey(0)
 
         if perdeu(tabuleiro, bola, raquete)
+            setProp(jogo,"vitoria",.F.)
             ? "PERDEU!!!!"
-            confirm("Iniciar nova partida?")
             exit
         endif
 
         if ganhou(jogo)
+            setProp(jogo,"vitoria",.T.)
             ? "GANHOU!!!!"
-            confirm("Iniciar nova partida?")
             exit
         endIf
 
@@ -468,3 +468,15 @@ function main()
 
 return
 
+function main()
+
+    local continua := .T.
+
+    do while continua
+        StartGame()
+        continua = Confirm("Iniciar uma nova partida?")
+    end
+    cls
+    ? "Bye!"
+
+return
