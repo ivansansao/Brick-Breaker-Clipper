@@ -9,6 +9,8 @@ function imprimeTabuleiro(jogo, tabuleiro, bola, raquete, blocos, b)
 
     local i
     local bloco
+    local jogador
+    jogador = prop(jogo,"jogador")
 
     @ prop(tabuleiro,"top"), prop(tabuleiro,"left") clear to prop(tabuleiro,"rows"), prop(tabuleiro,"cols")
 
@@ -26,7 +28,9 @@ function imprimeTabuleiro(jogo, tabuleiro, bola, raquete, blocos, b)
     next
 
     setcolor(prop(jogo,"messagecolor"))
-    @ prop(tabuleiro,"rows"), prop(tabuleiro,"left") say prop(jogo,"message")
+    @ prop(tabuleiro,"rows"), prop(tabuleiro,"left") say prop(jogo,"message") +" JOGADOR: "+prop(jogador,"nome");
+        +" Vitorias: "+tex(prop(jogador,"vitorias"));
+        +" Derrotas: "+tex(prop(jogador,"derrotas"))
 
     setColor("W+/N")
     @ prop(bola,"row") ,prop(bola,"col") say prop(bola,"char")
@@ -367,6 +371,58 @@ function adicionaBlocos(jogo, tabuleiro, blocos)
 
 return blocos
 
+function getJogador()
+    
+    LOCAL aFiles[ADIR("./data/*.plr")]    
+    local i
+    local nome
+    local cFile := ""
+    local selecionado := ""
+    local opc := 1
+    local cData := ""
+
+    cls
+    @ 2, 4 say "JOGADOR?"
+    ADIR("./data/*.plr", aFiles)
+
+    aAdd(aFiles,"** NOVO **")
+
+    for i = 1 to len(aFiles)
+        nome = upper(strtran(aFiles[i],".plr",""))
+        @ 3+i, 4 prompt nome
+    end
+
+    menu to opc
+
+    selecionado = upper(strtran(aFiles[opc],".plr",""))
+
+    if selecionado = "** NOVO **"
+
+        cls
+        nome = space(40)
+        @ 2,4 say "Qual seu nome?"
+        @ 4,4 get nome
+        read
+
+        nome = alltrim(nome)
+
+        cFile = nome +".plr"
+        cData = concat({'{{"nome","',nome,'"},{"vitorias",0},{"derrotas",0}}'})
+
+        memoWrit("./data/"+cFile, cData)
+
+    else
+        cFile = aFiles[opc]
+    endIf
+
+return StringToObject(memoread("data/"+cFile))
+
+function saveJogador(jogador)
+    ? "saving...."
+    memoWrit("./data/"+prop(jogador,"nome")+".plr", ObjectToString(jogador))
+    ? "saved!"
+return
+
 function StartGame()
 
     local blocos := {}
@@ -374,6 +430,7 @@ function StartGame()
     local bola
     local raquete
     local jogo
+    local jogador := getJogador()
 
     SetEnv()
 
@@ -401,7 +458,7 @@ function StartGame()
     bola      = {{"row", prop(tabuleiro,"rows")-3}, {"col", prop(tabuleiro,"cols")/2}, {"direction", "down"},{"inclination","right"},{"char",chr(9)},{"cor","G+/N"}}
     // raquete   = {{"row", prop(tabuleiro,"rows")-2}, {"col", 6}, {"width", 30},{"char",chr(178)}, {"cor",corSetMess}}
 
-    jogo = {{"qtdBlocos", len(blocos)},{"message",""},{"messagecolor","W/N, BG+/B"},{"debug",.F.},{"vitoria",.F.}}
+    jogo = {{"qtdBlocos", len(blocos)},{"message",""},{"messagecolor","W/N, BG+/B"},{"debug",.F.},{"vitoria",.F.},{"jogador",jogador}}
     adicionaBlocos(jogo, tabuleiro, blocos)
 
     if prop(jogo,"debug")
@@ -452,28 +509,35 @@ function StartGame()
         inkey(0)
 
         if perdeu(tabuleiro, bola, raquete)
+            setProp(jogador,"derrotas",prop(jogador,"derrotas")+1)
             setProp(jogo,"vitoria",.F.)
+            imprimeTabuleiro(jogo, tabuleiro, bola, raquete, blocos, 1)
             ? "PERDEU!!!!"
             exit
         endif
 
         if ganhou(jogo)
+            setProp(jogador,"vitorias",prop(jogador,"vitorias")+1)
             setProp(jogo,"vitoria",.T.)
+            imprimeTabuleiro(jogo, tabuleiro, bola, raquete, blocos, 1)
             ? "GANHOU!!!!"
             exit
         endIf
 
     endDo
+
+    saveJogador(jogador)
     set cursor on
 
-return
+return jogo
 
 function main()
 
     local continua := .T.
+    local jogo
 
     do while continua
-        StartGame()
+        jogo = StartGame()        
         continua = Confirm("Iniciar uma nova partida?")
     end
     cls

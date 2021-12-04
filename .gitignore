@@ -2,3 +2,4 @@ brickBreaker
 brickBreaker.c
 *.dbf
 *.log
+*.plr
