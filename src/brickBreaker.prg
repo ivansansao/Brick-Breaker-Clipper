@@ -63,13 +63,13 @@ function showExplosion(bloco)
 
     setColor("W+/N")
     if explosion = 1
-        @ prop(bloco,"row"), prop(bloco,"col") say "    ()    "
+        @ prop(bloco,"row"),   prop(bloco,"col")   say replicate(chr(178),10)
         setProp(bloco,"explosion",2)
     elseif explosion = 2
-        @ prop(bloco,"row"), prop(bloco,"col") say "   (  )   "
+        @ prop(bloco,"row"), prop(bloco,"col") say " ((    )) "
         setProp(bloco,"explosion",3)
     elseif explosion = 3
-        @ prop(bloco,"row"), prop(bloco,"col") say " ((    )) "
+        @ prop(bloco,"row"), prop(bloco,"col") say "(        )"
         setProp(bloco,"explosion",0)
     endIf
 
@@ -80,7 +80,7 @@ function rebaixaBlocos(tabuleiro, bola, raquete, blocos)
     local i
     
     for i = 1 to len(blocos)
-        setProp(blocos[i],"row", prop(blocos[i],"row")+zeroum())        
+        setProp(blocos[i],"row", prop(blocos[i],"row")+zeroum())
     next
 
 return
