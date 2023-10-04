@@ -1,16 +1,15 @@
 Projeto apenas para fins de noltalgia em Clipper!
 
 ![Alt text](src/assets/brickbreacker.gif "Brick Breacker")
+(Apenas para o Brick Breacker precisa do Framework Mauaka disponível nesta conta!)
 
-Utilizando o compilador Harbour para Linux Ubuntu! (Tem para Windows também)
+Utilizando o compilador xHarbour para Linux Ubuntu! (Tem para Windows também)
 
-Dependência do Framework Mauaka disponível nesta conta!
+### Instalar o compilador Harbour
 
-### Instalar o compilador 
+xHarbour compila os fontes do Clipper e já em 64bits
 
-Harbour compila os fontes do Clipper e já em 64bits
-
-Download do compiador
+Download do compilador
 
 http://www.xharbour.org/index.asp?page=download/binaries
 
