@@ -4,4 +4,5 @@ Projeto apenas para fins de noltalgia cliperiana!
 
 Utilizando o compilador Harbour para Linux Ubuntu!
 
+
 Dependência do Framework Mauaka disponível nesta conta!
